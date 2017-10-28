@@ -1,0 +1,18 @@
+BUILD_ID=DONTKILLME
+tomcat_path =/usr/local/softs/apache-tomcat-8.5.8
+file_path=~/.jenkins/workspace/eagle-web-demo/eagle-web-demo/target
+war_name=eagle-web-demo.war
+$tomcat_path/bin/shutdown.sh
+sleep 15s
+echo "rm -rf ${tomcat_path}/webapps/ROOT/*"
+rm -rf ${tomcat_path}/webapps/ROOT/*
+cd $file_path
+cp ${war_name} ${tomcat_path}/webapps/ROOT/
+cd $tomcat_path/webapps/ROOT/
+unzip ${war_name}
+rm -rf ${war_name}
+sleep 5s 
+#$tomcat_path/bin/startup.sh
+cd $tomcat_path/bin/
+./startup.sh
+echo "server restarted"
