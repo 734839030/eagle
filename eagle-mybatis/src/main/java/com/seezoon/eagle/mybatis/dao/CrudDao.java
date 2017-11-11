@@ -1,27 +1,25 @@
-package com.seezoon.eagle.mybatis.service;
+package com.seezoon.eagle.mybatis.dao;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.seezoon.eagle.mybatis.persistence.BaseEntity;
-import com.seezoon.eagle.mybatis.persistence.CrudDao;
-
-import net.sf.jsqlparser.statement.truncate.Truncate;
+import com.seezoon.eagle.mybatis.mapper.CrudMapper;
 
 /**
  * 当需要自动拥有增删改查功能时候继承
  * @author hdf
- *
+ * 2017年8月30日
+ * @param <M> mapper
+ * @param <T> entity
  */
-@Transactional(rollbackFor=Exception.class)
-public abstract class CrudService<D extends CrudDao<T>,T extends BaseEntity>{
+public abstract class CrudDao<M extends CrudMapper<T>,T extends BaseEntity>{
 
 	/**
 	 * 日志对象
@@ -29,40 +27,45 @@ public abstract class CrudService<D extends CrudDao<T>,T extends BaseEntity>{
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
-	protected D dao; 
+	protected M m; 
 	
 	public int insert(T t){
-		return dao.insert(t);
+		return m.insert(t);
 	}
 	public int insertSelective(T t){
-		return dao.insert(t);
+		return m.insert(t);
 	}
 	public int updateByPrimaryKeySelective(T t){
-		return dao.updateByPrimaryKeySelective(t);
+		return m.updateByPrimaryKeySelective(t);
 	}
 	public int updateByPrimaryKey(T t){
-		return dao.updateByPrimaryKey(t);
+		return m.updateByPrimaryKey(t);
 	}
-	@Transactional(readOnly=true)
 	public T selectByPrimaryKey(Serializable id){
-		return dao.selectByPrimaryKey(id);
+		return m.selectByPrimaryKey(id);
 	}
 	public int deleteByPrimaryKey(Serializable id){
-		return dao.deleteByPrimaryKey(id);
+		return m.deleteByPrimaryKey(id);
 	}
-	@Transactional(readOnly=true)
+	public int visualDeleteByPrimaryKey(T t){
+		return m.visualDeleteByPrimaryKey(t);
+	}
 	public List<T> findList(T t){
-		return dao.findList(t);
+		return m.findList(t);
 	}
-	@Transactional(readOnly=true)
 	public PageInfo<T> findByPage(T t,int pageNum,int pageSize,boolean count){
 		PageHelper.startPage(pageNum, pageSize, count);
 		List<T>  list = this.findList(t);
 		PageInfo<T> pageInfo = new PageInfo<T>(list);
 		return pageInfo;
 	}
-	@Transactional(readOnly=true)
 	public PageInfo<T> findByPage(T t,int pageNum,int pageSize){
+		PageHelper.startPage(pageNum, pageSize, Boolean.TRUE);
+		List<T>  list = this.findList(t);
+		PageInfo<T> pageInfo = new PageInfo<T>(list);
+		return pageInfo;
+	}
+	public PageInfo<T> findByPage(T t,int pageNum,int pageSize,String order,String direction){
 		PageHelper.startPage(pageNum, pageSize, Boolean.TRUE);
 		List<T>  list = this.findList(t);
 		PageInfo<T> pageInfo = new PageInfo<T>(list);
