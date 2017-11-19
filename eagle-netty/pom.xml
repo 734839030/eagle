@@ -8,22 +8,18 @@
 		<artifactId>eagle-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>eagle-conf</artifactId>
+	<artifactId>eagle-netty</artifactId>
 	<version>${eagle.version}</version>
-	<name>${project.artifactId}</name>
-	<url>http://maven.apache.org</url>
+	<name>eagle-netty</name>
 	<dependencies>
-		<dependency>
+	 <dependency>
 			<groupId>com.seezoon</groupId>
-			<artifactId>eagle-core</artifactId>
+			<artifactId>eagle-common</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.baidu.disconf</groupId>
-			<artifactId>disconf-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.zookeeper</groupId>
-			<artifactId>zookeeper</artifactId>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>4.1.17.Final</version>
 		</dependency>
 	</dependencies>
 </project>
